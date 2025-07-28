@@ -18,14 +18,28 @@ Developed a sophisticated multi-agent CrewAI system specialized for Vietnamese s
 2. **News Research Agent** - Gathers market intelligence via Brave Search  
 3. **Executive Report Writer Agent** - Synthesizes comprehensive executive summaries
 
-### Sequential Processing Pipeline
-```
-Stage 1-2: Data Collection (Parallel)
-├── Financial Analysis (vnstock data)
-└── News Research (Brave Search)
+### Process Configuration
+**Current Setup:** Sequential processing with toggle option for hierarchical
+- **Default**: `Process.sequential` (agents run one after another)
+- **Toggle**: Change to `Process.hierarchical` + `manager_llm` for parallel execution
 
-Stage 3: Synthesis
-└── Executive Summary (FileWriterTool)
+```python
+# In app.py line 396-397:
+process=Process.sequential,  # Change to hierarchical for parallel
+# manager_llm=self.llm,      # Uncomment for hierarchical mode
+```
+
+**Sequential Pipeline:**
+```
+Stage 1: Financial Analysis (vnstock data)
+Stage 2: News Research (Brave Search)
+```
+
+**Hierarchical Pipeline (Parallel):**
+```
+Manager Agent (coordinates)
+├── Financial Analysis (parallel)
+└── News Research (parallel)
 ```
 
 ---
