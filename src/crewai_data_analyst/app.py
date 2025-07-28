@@ -45,7 +45,7 @@ class FinancialDataAnalyst:
         
         # Initialize LLM
         self.llm = LLM(
-            model="o3-mini",
+            model="gpt-4.1-mini",
             api_key=self.openai_api_key
         )
         
@@ -372,14 +372,17 @@ class FinancialDataAnalyst:
             tuple: (company_name, industry) - Falls back to stock_symbol and empty string on error
         """
         try:
-            from vnstock import Vnstock
-            company = Vnstock().stock(symbol=stock_symbol, source='VCI').company
-            company_info = company.overview()
+            from vnstock import Listing
+            listing = Listing()
+            stock_list = listing.symbols_by_industries()
             
-            # Extract company name and industry for better search
-            if not company_info.empty:
-                company_name = company_info.loc['short_name', 0] if 'short_name' in company_info.index else stock_symbol
-                industry = company_info.loc['industry', 0] if 'industry' in company_info.index else ""
+            # Find the specific stock information
+            stock_info = stock_list[stock_list['symbol'] == stock_symbol.upper()]
+            
+            if not stock_info.empty:
+                # Extract company name and industry from the DataFrame
+                company_name = str(stock_info.iloc[0]['organ_name'])
+                industry = str(stock_info.iloc[0]['icb_name3'])
             else:
                 company_name = stock_symbol
                 industry = ""

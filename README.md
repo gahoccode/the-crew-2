@@ -113,6 +113,18 @@ This CrewAI financial analysis system requires high-performance AI models due to
   - Reliable handling of data structures and calculations
   - Superior reasoning capabilities for financial metrics
 
+**Rate Limit Mitigation:**
+- **GPT-4.1 mini** (Alternative for rate limits)
+  - Use when hitting GPT-4.1 rate limits
+  - Lower cost with good performance for routine tasks
+  - Adjust `n_results` parameter in search tools to lower values (e.g., 3-5 instead of 10)
+  - Consider batching requests and implementing retry logic with exponential backoff
+
+- **GPT-o4-mini** (Best quality for analysis with high TPM)
+  - Optimal choice for high-quality analysis when TPM (tokens per minute) limits are a concern
+  - Excellent balance between analysis quality and rate limit efficiency
+  - Recommended for complex financial modeling and detailed report generation
+
 **For Research Agent (Secondary):**
 - **GPT-4o-mini** (Acceptable for research tasks)
   - Suitable for general research and data gathering
