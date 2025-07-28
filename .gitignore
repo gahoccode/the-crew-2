@@ -128,3 +128,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+__pycache__/
+
+# Claude
+.mcp.json

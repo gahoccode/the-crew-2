@@ -296,33 +296,20 @@ class FinancialDataAnalyst:
             agent=self.data_analyst_agent
         )
     
-    def create_news_research_task(self, stock_symbol: str) -> Task:
+    def create_news_research_task(self, stock_symbol: str, company_name: str, industry: str) -> Task:
         """
         Create a news research task for gathering recent company news.
         
         Args:
             stock_symbol: Stock symbol to research
+            company_name: Company name (fetched centrally to ensure consistency)
+            industry: Company industry (fetched centrally to ensure consistency)
             
         Returns:
             Task: Configured news research task
         """
-        # Get actual company information from vnstock
-        try:
-            from vnstock import Vnstock
-            company = Vnstock().stock(symbol=stock_symbol, source='VCI').company
-            company_info = company.overview()
-            
-            # Extract company name and industry for better search
-            if not company_info.empty:
-                company_name = company_info.loc['short_name', 0] if 'short_name' in company_info.index else stock_symbol
-                industry = company_info.loc['industry', 0] if 'industry' in company_info.index else ""
-            else:
-                company_name = stock_symbol
-                industry = ""
-        except Exception:
-            # Fallback to stock symbol if API fails
-            company_name = stock_symbol
-            industry = ""
+        # Use the centrally fetched company information to ensure consistency
+        # This eliminates the race condition issue when running agents in parallel
         
         task_description = f"""
         Research recent news and developments about {company_name} ({stock_symbol}) focusing solely on this company:
@@ -373,6 +360,37 @@ class FinancialDataAnalyst:
             agent=self.news_research_agent
         )
     
+    def _get_company_info(self, stock_symbol: str) -> tuple[str, str]:
+        """
+        Centralized method to fetch company information from vnstock API.
+        This ensures consistent company data across all tasks when running in parallel.
+        
+        Args:
+            stock_symbol: Stock symbol to get company info for
+            
+        Returns:
+            tuple: (company_name, industry) - Falls back to stock_symbol and empty string on error
+        """
+        try:
+            from vnstock import Vnstock
+            company = Vnstock().stock(symbol=stock_symbol, source='VCI').company
+            company_info = company.overview()
+            
+            # Extract company name and industry for better search
+            if not company_info.empty:
+                company_name = company_info.loc['short_name', 0] if 'short_name' in company_info.index else stock_symbol
+                industry = company_info.loc['industry', 0] if 'industry' in company_info.index else ""
+            else:
+                company_name = stock_symbol
+                industry = ""
+                
+            return company_name, industry
+            
+        except Exception as e:
+            print(f"⚠️ Warning: Could not fetch company info for {stock_symbol}: {str(e)}")
+            # Fallback to stock symbol if API fails
+            return stock_symbol, ""
+    
     def run_analysis(self, stock_symbol: str, analysis_type: str = "comprehensive") -> str:
         """
         Run the financial analysis and news research for a given stock.
@@ -385,16 +403,20 @@ class FinancialDataAnalyst:
             str: Analysis results
         """
         try:
-            # Create tasks
+            # Fetch company information once to ensure consistency across all tasks
+            company_name, industry = self._get_company_info(stock_symbol)
+            print(f"📊 Company Info: {company_name} ({stock_symbol}) - Industry: {industry or 'N/A'}")
+            
+            # Create tasks with consistent company information
             analysis_task = self.create_analysis_task(stock_symbol, analysis_type)
-            news_task = self.create_news_research_task(stock_symbol)
+            news_task = self.create_news_research_task(stock_symbol, company_name, industry)
             
             # Create and run the crew with both agents
             crew = Crew(
                 agents=[self.data_analyst_agent, self.news_research_agent],
                 tasks=[analysis_task, news_task],
-                process=Process.sequential, # Change to hierarchical if you want to run them in parallel
-                #manager_llm=self.llm, # Add this parameter if you want to use a sequential process. This will add a manager agent to coordinate the crew
+                process=Process.hierarchical, # Change to hierarchical if you want to run them in parallel
+                manager_llm=self.llm, # Add this parameter if you want to use a sequential process. This will add a manager agent to coordinate the crew
                 verbose=True,
                 memory=True
             )

@@ -247,13 +247,21 @@ BRAVE_API_KEY=your_brave_search_api_key_here
 **Problem:** vnstock ratio dataframe returns Vietnamese multi-index columns  
 **Solution:** flattern multi-index columns to single level columns
 
+### Challenge 2: Parallel Agent Data Consistency Issue
+**Problem:** When running agents in parallel (hierarchical process), reports showed different company names for the same ticker symbol  
+**Root Cause:** Both `create_financial_analysis_task()` and `create_news_research_task()` independently called vnstock API to fetch company information, leading to race conditions and inconsistent data  
+**Solution:** Centralized company information fetching in `analyze_stock()` method and passed consistent data to both task creation methods  
+**Code Changes:**
+- Created `_get_company_info(stock_symbol)` method for centralized data fetching
+- Modified task creation methods to accept company info as parameters
+- Eliminated duplicate API calls to ensure data consistency
 
-### Challenge 2: Agent Coordination
+### Challenge 3: Agent Coordination
 **Problem:** Efficient multi-agent workflow design  
 **Solution:** Strategic delegation configuration  
 **Context7 Learning:** Lead agents with `allow_delegation=True`, specialists with `False`
 
-### Challenge 3: Professional Report Generation
+### Challenge 4: Professional Report Generation
 **Problem:** Executive-level document creation  
 **Solution:** FileWriterTool with structured markdown templates  
 **Context7 Learning:** Task-level markdown formatting with `markdown=True`
