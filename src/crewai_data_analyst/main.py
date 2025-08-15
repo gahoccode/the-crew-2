@@ -6,7 +6,7 @@ This file provides the standard CrewAI entry points for running the crew.
 
 import os
 import sys
-from .app import FinancialDataAnalyst
+from .crew import FinancialAnalysisCrew
 
 def kickoff():
     """
@@ -14,7 +14,7 @@ def kickoff():
     This function is called by the `crewai run` command.
     """
     try:
-        print("🚀 Starting CrewAI Financial Data Analyst...")
+        print("🚀 Starting CrewAI Financial Analysis Crew...")
         print("=" * 60)
         
         # Check for OpenAI API key
@@ -24,17 +24,17 @@ def kickoff():
             print("export OPENAI_API_KEY='your-api-key-here'")
             return
         
-        # Initialize the analyst
-        analyst = FinancialDataAnalyst()
+        # Initialize the crew
+        crew = FinancialAnalysisCrew()
         
-        # Default stock to analyze (from reference file)
+        # Default stock to analyze
         stock_symbol = "REE"
         
-        print(f"📊 Analyzing {stock_symbol} stock with CrewAI agent...")
+        print(f"📊 Analyzing {stock_symbol} stock with CrewAI crew...")
         print("=" * 60)
         
         # Run comprehensive analysis
-        result = analyst.run_analysis(
+        result = crew.run_analysis(
             stock_symbol=stock_symbol,
             analysis_type="comprehensive"
         )
@@ -47,7 +47,7 @@ def kickoff():
         print("✅ Analysis completed successfully!")
         
     except Exception as e:
-        print(f"❌ Error running CrewAI Financial Analyst: {str(e)}")
+        print(f"❌ Error running CrewAI Financial Analysis Crew: {str(e)}")
         sys.exit(1)
 
 def run_crew():
@@ -57,5 +57,11 @@ def run_crew():
     """
     kickoff()
 
-if __name__ == "__main__":
+def main():
+    """
+    Direct execution entry point.
+    """
     kickoff()
+
+if __name__ == "__main__":
+    main()

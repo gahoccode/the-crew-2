@@ -132,3 +132,5 @@ __pycache__/
 
 # Claude
 .mcp.json
+
+.DS_Store

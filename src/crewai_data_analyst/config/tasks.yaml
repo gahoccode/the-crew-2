@@ -1,0 +1,103 @@
+financial_analysis:
+  description: >
+    CRITICAL: Use ONLY the REAL data provided in the context below for {stock_symbol}. DO NOT create mock/simulated data.
+    
+    Perform a comprehensive financial analysis of {stock_symbol} including:
+    
+    1. **Data Overview**: Analyze the ACTUAL financial statements data provided
+    2. **Profitability Analysis**: 
+       - Use REAL revenue and profit data from income statement
+       - Calculate actual profit margins from the data
+       - Use actual ROE, ROA from the financial ratios
+    3. **Liquidity Analysis**:
+       - Use REAL current ratio, quick ratio from financial ratios
+       - Analyze actual working capital from balance sheet
+    4. **Financial Health**:
+       - Use REAL debt-to-equity ratio from the data
+       - Calculate actual interest coverage from income statement
+    5. **Data Analysis & Insights**:
+       - Perform statistical analysis using pandas on the ACTUAL data
+       - Calculate trends, growth rates, and comparative metrics
+       - Create detailed data tables showing year-over-year changes
+       - Provide numerical trend descriptions and analysis
+       - Focus on data-driven insights from the real Vietnamese stock data
+    6. **Investment Insights**: Base recommendations on ACTUAL financial performance
+    
+    REMEMBER: All analysis must be based on the REAL {stock_symbol} data provided in the context.
+    
+    {data_context}
+  expected_output: "Comprehensive financial analysis report with numerical insights and data-driven recommendations"
+  agent: financial_data_analyst
+
+profitability_analysis:
+  description: >
+    Focus on profitability analysis of {stock_symbol} using REAL data:
+    
+    1. Analyze revenue growth trends using actual data
+    2. Calculate profit margins over time from real financial statements
+    3. Compare ROE and ROA trends using actual ratios
+    4. Perform statistical analysis on profitability metrics
+    5. Provide data-driven insights on profitability trends
+    
+    {data_context}
+  expected_output: "Detailed profitability analysis with trends and insights"
+  agent: financial_data_analyst
+
+liquidity_analysis:
+  description: >
+    Focus on liquidity analysis of {stock_symbol} using REAL data:
+    
+    1. Analyze current and quick ratios from actual financial data
+    2. Calculate working capital trends over time
+    3. Assess cash flow patterns using real cash flow statements
+    4. Evaluate short-term financial health indicators
+    5. Provide insights on liquidity position and trends
+    
+    {data_context}
+  expected_output: "Comprehensive liquidity analysis with working capital assessment"
+  agent: financial_data_analyst
+
+news_research:
+  description: >
+    Research recent news and developments about {company_name} ({stock_symbol}) focusing solely on this company:
+    
+    **Company Context**:
+    - Stock Symbol: {stock_symbol}
+    - Company Name: {company_name}
+    - Industry: {industry}
+    
+    1. **Future Plans & Strategy**:
+       - Search for: "{company_name} future plans 2024 2025"
+       - Search for: "{company_name} {stock_symbol} strategic development Vietnam"
+       - Look for expansion plans, new projects, strategic initiatives
+    
+    2. **Recent Investments & Projects**:
+       - Search for: "{company_name} investment projects Vietnam"
+       - Search for: "{company_name} {stock_symbol} new investments acquisitions"
+       - Find information about capital expenditure, new ventures, partnerships
+    
+    3. **Management Commentary & Performance Views**:
+       - Search for: "{company_name} CEO management outlook Vietnam"
+       - Search for: "{company_name} {stock_symbol} earnings call management commentary"
+       - Look for executive statements, performance assessments, market outlook
+    
+    4. **Recent Financial News**:
+       - Search for: "{company_name} financial results Vietnam stock"
+       - Search for: "{company_name} {stock_symbol} quarterly earnings Vietnam"
+       - Find recent financial announcements, analyst coverage, market reactions
+    
+    **Search Instructions**:
+    - Use multiple search queries to gather comprehensive information
+    - Focus on news from the last 6-12 months
+    - Prioritize Vietnamese financial news sources and official company announcements
+    - Look for both Vietnamese and English language sources
+    - Summarize key findings with dates and sources
+    
+    **Output Requirements**:
+    - Organize findings by the 4 categories above
+    - Include publication dates and source URLs when available
+    - Highlight the most significant developments
+    - Provide a summary of overall market sentiment
+    - Focus on information that could impact stock performance
+  expected_output: "Comprehensive news research report organized by categories with sources and dates"
+  agent: news_research_analyst
