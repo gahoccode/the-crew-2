@@ -24,7 +24,10 @@ cp env.example .env
 
 ### Running the Application
 ```bash
-# Run via command line (new structured approach)
+# Standard CrewAI command (recommended)
+crewai run
+
+# Direct Python execution
 python -m crewai_data_analyst.main
 
 # Run via UV script entry point
@@ -33,17 +36,17 @@ the-crew-2
 # Or alternative entry point
 run_crew
 
-# Legacy Streamlit interface (if app.py still exists)
-streamlit run src/crewai_data_analyst/app.py
+# Direct Python script execution (if needed)
+python delete_reports.py
 ```
 
 ### Development Utilities
 ```bash
-# Clean generated reports
+# Clean generated reports (shell script)
 ./delete_reports.sh
 
-# Generate reports manually
-python src/crewai_data_analyst/app.py
+# Clean generated reports (Python script)
+python delete_reports.py
 ```
 
 ## Code Architecture
@@ -57,13 +60,12 @@ src/crewai_data_analyst/
 ├── __init__.py              # Package initialization
 ├── main.py                  # Entry points and CLI interface  
 ├── crew.py                  # Main crew orchestration logic
-├── app.py                   # Legacy Streamlit interface (if kept)
 ├── config/                  # Configuration files
 │   ├── agents.yaml         # Agent definitions and settings
 │   └── tasks.yaml          # Task templates and descriptions
 └── tools/                   # Custom tools and utilities
     ├── __init__.py
-    └── custom_tool.py      # Financial data and news search tools
+    └── financial_data_tools.py  # Financial data and news search tools
 ```
 
 #### Core Components
@@ -85,19 +87,19 @@ src/crewai_data_analyst/
    - **liquidity_analysis**: Liquidity and working capital analysis  
    - **news_research**: Market intelligence and company news research
 
-4. **Custom Tools** (`tools/custom_tool.py`)
+4. **Financial Tools** (`tools/financial_data_tools.py`)
    - **FinancialDataTool**: vnstock integration and data processing
    - **NewsSearchTool**: Brave Search integration for market intelligence
    - Encapsulates data fetching and processing logic
 
 #### Key Data Processing Components
 
-**vnstock Integration** (`tools/custom_tool.py:FinancialDataTool`)
+**vnstock Integration** (`tools/financial_data_tools.py:FinancialDataTool`)
 - Fetches Vietnamese stock market data from multiple sources (VCI, TCBS)
 - Handles complex multi-index DataFrames with Vietnamese column names
 - Processes financial statements: income, balance sheet, cash flow, ratios, dividends
 
-**Data Processing Pipeline** (`tools/custom_tool.py:_process_ratio_dataframe`)
+**Data Processing Pipeline** (`tools/financial_data_tools.py:_process_ratio_dataframe`)
 - **Challenge Solved**: vnstock returns Vietnamese multi-index columns
 - **Solution**: Flattens to English format with standardized naming
 - **Result**: Columns like `Profitability_ROE_Pct`, `Liquidity_Current_Ratio`
@@ -158,15 +160,10 @@ process=Process.sequential
 ### Output Management
 - **report.md**: Technical financial analysis with quantitative insights
 - **news.md**: Market intelligence and company news research  
-- **Streamlit Interface**: Interactive web UI at `http://localhost:8501`
+- **Command Line Interface**: Primary interaction via `crewai run`
 
-### Project Structure Context
-```
-src/crewai_data_analyst/
-├── app.py          # Main FinancialDataAnalyst class and agent definitions
-├── main.py         # CLI entry points (kickoff, run_crew)
-└── __init__.py     # Package initialization
-```
+### Project Structure Summary
+The codebase now follows a clean, modular structure with configuration-driven agents and tasks, eliminating the legacy monolithic approach.
 
 ## Important Implementation Notes
 

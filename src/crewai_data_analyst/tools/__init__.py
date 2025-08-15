@@ -1,7 +1,7 @@
 """
-Custom tools for CrewAI Financial Analysis
+Financial analysis tools for CrewAI
 """
 
-from .custom_tool import FinancialDataTool, NewsSearchTool
+from .financial_data_tools import FinancialDataTool, NewsSearchTool
 
 __all__ = ['FinancialDataTool', 'NewsSearchTool']
